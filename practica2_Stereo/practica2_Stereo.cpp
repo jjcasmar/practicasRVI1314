@@ -221,7 +221,7 @@ int main(int , char **)
 		tracker.getPosition(track_position);
 		correccion  = osg::Vec3d(0,-H*0.5, 0);
 		//track_position += correccion;
-		//track_position.set(track_position.x(),track_position.y(),-track_position.z());
+		track_position.set(-track_position.x(),-track_position.y(),track_position.z());
 
 		//position = initial_position + head_position;
 
@@ -256,33 +256,23 @@ int main(int , char **)
 		bottom = -top;*/
 		// Para el tracker
 		////iguales para ambas camaras
-		top    = (H*0.5-track_position.y() + track_position.y())/(track_position.z())*near_plane;
-		bottom = (H*0.5+track_position.y() - track_position.y())/(track_position.z())*near_plane;
+		top    = (H*0.5-track_position.y())/(track_position.z())*near_plane;
+		bottom = (H*0.5+track_position.y())/(track_position.z())*near_plane;
 
 		//Frustum ojo derecho
-		left   = ((W+DIO)*0.5+track_position.x() - track_position.x() - DIO*0.5)/(track_position.z())*near_plane;
-		right  = ((W-DIO)*0.5-track_position.x() + track_position.x() + DIO*0.5)/(track_position.z())*near_plane;
+		left   = ((W+DIO)*0.5+track_position.x())/(track_position.z())*near_plane;
+		right  = ((W-DIO)*0.5-track_position.x())/(track_position.z())*near_plane;
 	
 		right_camera->setViewMatrix(osg::Matrix::translate(-right_eye));
-		right_camera->setProjectionMatrixAsFrustum(left,right,bottom,top,near_plane,far_plane);
+		right_camera->setProjectionMatrixAsFrustum(-left,right,-bottom,top,near_plane,far_plane);
 
 		//Frustum ojo izquierdo
-		left   = ((W-DIO)*0.5+track_position.x() - track_position.x() + DIO*0.5)/(track_position.z())*near_plane;
-		right  = ((W+DIO)*0.5-track_position.x() + track_position.x() - DIO*0.5)/(track_position.z())*near_plane;
-		
-		/*left = (W-DIO)*0.5/D*near_plane;
-		right = (W+DIO)*0.5/D*near_plane;
-		top = H*0.5/D*near_plane;
-		bottom = -top;*/
+		left   = ((W-DIO)*0.5+track_position.x())/(track_position.z())*near_plane;
+		right  = ((W+DIO)*0.5-track_position.x())/(track_position.z())*near_plane;
 
 		left_camera->setViewMatrix(osg::Matrix::translate(-left_eye));
-		left_camera->setProjectionMatrixAsFrustum(left,right,bottom,top,near_plane,far_plane);
-		
+		left_camera->setProjectionMatrixAsFrustum(-left,right,-bottom,top,near_plane,far_plane);
 		/**/
-
-
-		//cout << left_eye.x() << " " << left_eye.y() << " " << left_eye.z() << endl;
-		//cout << right_eye.x() << " " << right_eye.y() << " " << right_eye.z() << endl;
 
 		//left_camera->setProjectionMatrix(right_camera->getProjectionMatrix());
 		
